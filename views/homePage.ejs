@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- CSS -->
+
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+            crossorigin="anonymous"
+        />
+
+        <style>
+            .visible1 {
+                visibility: visible;
+                opacity: 1;
+                transition: opacity 2s linear;
+            }
+            .hidden1 {
+                visibility: hidden;
+                opacity: 0;
+                transition: visibility 0s 2s, opacity 2s linear;
+            }
+        </style>
+        <title>Payroll</title>
+    </head>
+    <body>
+        <%-include('partials/head', {loggedIn: true, siteType: userType})%>
+
+        <div class="p-3">
+            <h1>Welcome <%= title %></h1>
+
+            <div class="row">
+                <div class="col-4">
+                    <div
+                        class="list-group"
+                        id="list-tab"
+                        role="tablist"
+                        style="
+                            position: -webkit-sticky;
+                            position: sticky;
+                            top: 10px;
+                        "
+                    >
+                        <a
+                            class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center"
+                            id="list-home-list"
+                            data-toggle="list"
+                            href="#list-home"
+                            role="tab"
+                            aria-controls="home"
+                            >Employees<span class="badge badge-dark badge-pill"
+                                ><%= employeeCount%></span
+                            ></a
+                        >
+                        <a
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                            id="list-profile-list"
+                            data-toggle="list"
+                            href="#list-profile"
+                            role="tab"
+                            aria-controls="profile"
+                            >Admins<span class="badge badge-dark badge-pill">
+                                <%if(currentUser=="test@test.com"){%> <%=
+                                adminCount%> <%} else{ %> <%= adminCount-1%>
+                                <%}%>
+                            </span></a
+                        >
+
+                        <p
+                            class="text-center mt-3 text-<%=color%>"
+                            id="message"
+                        >
+                            <%=message%>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="tab-content" id="nav-tabContent">
+                        <div
+                            class="tab-pane fade show active"
+                            id="list-home"
+                            role="tabpanel"
+                            aria-labelledby="list-home-list"
+                        >
+                            <div class="accordion" id="accordionExample">
+                                <%for(let i = 0; i < employeeArr.length; i++){%>
+                                <div class="card">
+                                    <div class="card-header" id="headingOne">
+                                        <h2 class="mb-0">
+                                            <button
+                                                class="btn btn-link"
+                                                type="button"
+                                                data-toggle="collapse"
+                                                data-target="#collapse<%=i%>"
+                                                aria-controls="collapse"
+                                            >
+                                                <%= employeeArr[i].fName %> <%=
+                                                employeeArr[i].lName %>
+                                                <%if(employeeArr[i].email ===
+                                                currentUser){%> (You) <%}%>
+                                            </button>
+                                        </h2>
+                                    </div>
+
+                                    <div
+                                        id="collapse<%=i%>"
+                                        class="collapse"
+                                        aria-labelledby="heading<%=i%>"
+                                        data-parent="#accordionExample"
+                                    >
+                                        <div class="card-body">
+                                            <div class="card">
+                                                <h5 class="card-header">
+                                                    <%=employeeArr[i].position%>
+                                                </h5>
+                                                <div class="card-body">
+                                                    <p class="card-text">
+                                                        <span
+                                                            >Years Employed:
+                                                            <%=employeeArr[i].yearsWorked%></span
+                                                        >
+                                                        <br />
+                                                        <br />
+                                                        <span
+                                                            >Tel:
+                                                            <%=employeeArr[i].tel%></span
+                                                        >
+                                                        <br />
+                                                        <br />
+                                                        <span
+                                                            >Email:
+                                                            <%=employeeArr[i].email%></span
+                                                        >
+                                                        <br />
+                                                        <br />
+
+                                                        <%if(adminUser){%>
+                                                        <span>
+                                                            Current Pay:
+                                                            <%=employeeArr[i].currentPay%>
+                                                        </span>
+                                                        <%}else
+                                                        if(employeeArr[i].email===currentUser){%>
+                                                        <span>
+                                                            Current Pay:
+                                                            <%=employeeArr[i].currentPay%>
+                                                        </span>
+                                                        <%}else{%>
+                                                        <span>
+                                                            Current Pay: XXX
+                                                        </span>
+                                                        <%}%>
+                                                    </p>
+
+                                                    <%if(adminUser){%>
+                                                    <!-- Button trigger modal -->
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-primary"
+                                                        data-toggle="modal"
+                                                        data-target="#exampleModal<%=i%>"
+                                                    >
+                                                        Edit Record
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-danger"
+                                                        data-toggle="modal"
+                                                        data-target="#exampleModal<%=i%>"
+                                                    >
+                                                        Delete Record
+                                                    </button>
+
+                                                    <!-- Modal -->
+                                                    <div
+                                                        class="modal fade"
+                                                        id="exampleModal<%=i%>"
+                                                        tabindex="-1"
+                                                        role="dialog"
+                                                        aria-labelledby="exampleModalLabel"
+                                                        aria-hidden="true"
+                                                    >
+                                                        <div
+                                                            class="modal-dialog"
+                                                            role="document"
+                                                        >
+                                                            <div
+                                                                class="modal-content"
+                                                            >
+                                                                <div
+                                                                    class="modal-header"
+                                                                >
+                                                                    <h5
+                                                                        class="modal-title"
+                                                                        id="exampleModalLabel"
+                                                                    >
+                                                                        Woah!
+                                                                    </h5>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="close"
+                                                                        data-dismiss="modal"
+                                                                        aria-label="Close"
+                                                                    >
+                                                                        <span
+                                                                            aria-hidden="true"
+                                                                            >&times;</span
+                                                                        >
+                                                                    </button>
+                                                                </div>
+                                                                <div
+                                                                    class="modal-body"
+                                                                >
+                                                                    You must be
+                                                                    an Admin
+                                                                    user trying
+                                                                    to delete or
+                                                                    edit an
+                                                                    employees
+                                                                    record.
+                                                                    Since this
+                                                                    website is
+                                                                    just a
+                                                                    project, I
+                                                                    will not
+                                                                    allow you to
+                                                                    delete or
+                                                                    edit
+                                                                    employee
+                                                                    records!
+                                                                    However, you
+                                                                    can delete
+                                                                    or edit your
+                                                                    own record.
+                                                                    Try it out!
+                                                                </div>
+                                                                <div
+                                                                    class="modal-footer"
+                                                                >
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn btn-secondary"
+                                                                        data-dismiss="modal"
+                                                                    >
+                                                                        Close
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <%}else%>
+                                                    <%if(employeeArr[i].email===currentUser){%>
+                                                    <!-- Button trigger modal -->
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-primary"
+                                                        data-toggle="modal"
+                                                        data-target="#exampleModal"
+                                                    >
+                                                        Edit Record
+                                                    </button>
+
+                                                    <!-- Modal -->
+
+                                                    <div
+                                                        class="modal fade"
+                                                        id="exampleModal"
+                                                        tabindex="-1"
+                                                        role="dialog"
+                                                        aria-labelledby="exampleModalLabel"
+                                                        aria-hidden="true"
+                                                    >
+                                                        <form
+                                                            action="/editRecord"
+                                                            method="post"
+                                                        >
+                                                            <div
+                                                                class="modal-dialog"
+                                                                role="document"
+                                                            >
+                                                                <div
+                                                                    class="modal-content"
+                                                                >
+                                                                    <div
+                                                                        class="modal-header"
+                                                                    >
+                                                                        <h5
+                                                                            class="modal-title"
+                                                                            id="exampleModalLabel"
+                                                                        >
+                                                                            Editing
+                                                                            Record
+                                                                        </h5>
+                                                                        <button
+                                                                            type="button"
+                                                                            class="close"
+                                                                            data-dismiss="modal"
+                                                                            aria-label="Close"
+                                                                        >
+                                                                            <span
+                                                                                aria-hidden="true"
+                                                                                >&times;</span
+                                                                            >
+                                                                        </button>
+                                                                    </div>
+                                                                    <div
+                                                                        class="modal-body"
+                                                                    >
+                                                                        <div
+                                                                            class="row mb-3"
+                                                                        >
+                                                                            <div
+                                                                                class="col"
+                                                                            >
+                                                                                <input
+                                                                                    type="text"
+                                                                                    class="form-control firstNameInput"
+                                                                                    placeholder="First Name: <%=employeeArr[i].fName%>"
+                                                                                    name="fName"
+                                                                                    onblur="firstName()"
+                                                                                    value=""
+                                                                                />
+                                                                            </div>
+                                                                            <div
+                                                                                class="col"
+                                                                            >
+                                                                                <input
+                                                                                    type="text"
+                                                                                    class="form-control lnameInput"
+                                                                                    placeholder="Last Name: <%=employeeArr[i].lName%>"
+                                                                                    name="lName"
+                                                                                    onblur="lastName()"
+                                                                                    value=""
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div
+                                                                            class="form-group"
+                                                                        >
+                                                                            <input
+                                                                                type="text"
+                                                                                class="form-control"
+                                                                                id="formGroupExampleInput"
+                                                                                placeholder="Years Employed: "
+                                                                                value="Position: <%=employeeArr[i].position%>"
+                                                                                disabled
+                                                                            />
+                                                                        </div>
+                                                                        <div
+                                                                            class="form-group"
+                                                                        >
+                                                                            <input
+                                                                                type="text"
+                                                                                class="form-control"
+                                                                                id="formGroupExampleInput"
+                                                                                placeholder="Years Employed"
+                                                                                value="Years Employed: <%=employeeArr[i].yearsWorked%>"
+                                                                                disabled
+                                                                            />
+                                                                        </div>
+                                                                        <div
+                                                                            class="form-group"
+                                                                        >
+                                                                            <input
+                                                                                type="text"
+                                                                                class="form-control"
+                                                                                id="formGroupExampleInput2"
+                                                                                placeholder=""
+                                                                                value="<%=employeeArr[i].email%>"
+                                                                                name="email"
+                                                                                readonly
+                                                                            />
+                                                                        </div>
+                                                                        <div
+                                                                            class="form-group"
+                                                                        >
+                                                                            <input
+                                                                                type="text"
+                                                                                class="form-control"
+                                                                                id="formGroupExampleInput2"
+                                                                                placeholder="Current Pay"
+                                                                                value="Current Pay: <%=employeeArr[i].currentPay%>"
+                                                                                disabled
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="modal-footer"
+                                                                    >
+                                                                        <button
+                                                                            type="button"
+                                                                            class="btn btn-secondary"
+                                                                            data-dismiss="modal"
+                                                                        >
+                                                                            Close
+                                                                        </button>
+                                                                        <button
+                                                                            type="submit"
+                                                                            class="btn btn-primary"
+                                                                        >
+                                                                            Save
+                                                                            changes
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-danger"
+                                                        data-toggle="modal"
+                                                        data-target="#exampleModal<%=i%>2"
+                                                    >
+                                                        Delete Record
+                                                    </button>
+
+                                                    <!-- Modal -->
+                                                    <div
+                                                        class="modal fade"
+                                                        id="exampleModal<%=i%>2"
+                                                        tabindex="-1"
+                                                        role="dialog"
+                                                        aria-labelledby="exampleModalLabel"
+                                                        aria-hidden="true"
+                                                    >
+                                                        <div
+                                                            class="modal-dialog"
+                                                            role="document"
+                                                        >
+                                                            <div
+                                                                class="modal-content"
+                                                            >
+                                                                <div
+                                                                    class="modal-header"
+                                                                >
+                                                                    <h5
+                                                                        class="modal-title"
+                                                                        id="exampleModalLabel"
+                                                                    >
+                                                                        Deleting
+                                                                        Record
+                                                                    </h5>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="close"
+                                                                        data-dismiss="modal"
+                                                                        aria-label="Close"
+                                                                    >
+                                                                        <span
+                                                                            aria-hidden="true"
+                                                                            >&times;</span
+                                                                        >
+                                                                    </button>
+                                                                </div>
+                                                                <div
+                                                                    class="modal-body"
+                                                                >
+                                                                    Usually this
+                                                                    is an Admin
+                                                                    only
+                                                                    feature, but
+                                                                    since this
+                                                                    is just a
+                                                                    project. I
+                                                                    guess I'll
+                                                                    let it
+                                                                    slide.
+                                                                    <br />
+                                                                    <br />Are
+                                                                    you sure you
+                                                                    want to
+                                                                    delete this
+                                                                    record?
+                                                                    (This can't
+                                                                    be undone)
+                                                                </div>
+                                                                <div
+                                                                    class="modal-footer"
+                                                                >
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn btn-secondary"
+                                                                        data-dismiss="modal"
+                                                                    >
+                                                                        Close
+                                                                    </button>
+                                                                    <form
+                                                                        action="/deleteRecord"
+                                                                        method="post"
+                                                                    >
+                                                                        <button
+                                                                            type="submit"
+                                                                            class="btn btn-danger"
+                                                                        >
+                                                                            Delete
+                                                                            Record
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <%}%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div
+                            class="tab-pane fade"
+                            id="list-profile"
+                            role="tabpanel"
+                            aria-labelledby="list-profile-list"
+                        >
+                            <div class="accordion" id="accordionExample2">
+                                <%for(let i = 0; i < adminArr.length; i++){%>
+                                <%if(adminArr[i].email==="test@test.com"&&currentUser
+                                != "test@test.com") {continue}%>
+                                <div class="card">
+                                    <div class="card-header" id="headingOne">
+                                        <h2 class="mb-0">
+                                            <button
+                                                class="btn btn-link"
+                                                type="button"
+                                                data-toggle="collapse"
+                                                data-target="#collapse-<%=i%>"
+                                                aria-controls="collapse"
+                                            >
+                                                <%= adminArr[i].fName %> <%=
+                                                adminArr[i].lName %>
+                                                <%if(adminArr[i].email ===
+                                                currentUser){%> (You) <%}%>
+                                            </button>
+                                        </h2>
+                                    </div>
+
+                                    <div
+                                        id="collapse-<%=i%>"
+                                        class="collapse"
+                                        aria-labelledby="headingTwo"
+                                        data-parent="#accordionExample2"
+                                    >
+                                        <div class="card-body">
+                                            <div class="card">
+                                                <h5 class="card-header">
+                                                    <%=adminArr[i].position%>
+                                                </h5>
+                                                <div class="card-body">
+                                                    <p class="card-text">
+                                                        <span
+                                                            >Years Employed:
+                                                            <%=adminArr[i].yearsWorked%></span
+                                                        >
+                                                        <br />
+                                                        <br />
+                                                        <span
+                                                            >Tel:
+                                                            <%=adminArr[i].tel%></span
+                                                        >
+                                                        <br />
+                                                        <br />
+                                                        <span
+                                                            >Email:
+                                                            <%=adminArr[i].email%></span
+                                                        >
+                                                        <br />
+                                                        <br />
+
+                                                        <%if(adminArr[i].email
+                                                        === currentUser){%>
+                                                        <span>
+                                                            Current Pay:
+                                                            <%=adminArr[i].currentPay%>
+                                                        </span>
+                                                        <%}else{%>
+                                                        <span>
+                                                            Current Pay: XXX
+                                                        </span>
+
+                                                        <%}%>
+                                                    </p>
+                                                    <%if(adminArr[i].email ===
+                                                    "test@test.com"){%>
+
+                                                    <!-- Button trigger modal -->
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-primary"
+                                                        data-toggle="modal"
+                                                        data-target="#exampleModal<%=i%>1111"
+                                                    >
+                                                        Edit Record
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-danger"
+                                                        data-toggle="modal"
+                                                        data-target="#exampleModal<%=i%>1111"
+                                                    >
+                                                        Delete Record
+                                                    </button>
+
+                                                    <!-- Modal -->
+                                                    <div
+                                                        class="modal fade"
+                                                        id="exampleModal<%=i%>1111"
+                                                        tabindex="-1"
+                                                        role="dialog"
+                                                        aria-labelledby="exampleModalLabel"
+                                                        aria-hidden="true"
+                                                    >
+                                                        <div
+                                                            class="modal-dialog"
+                                                            role="document"
+                                                        >
+                                                            <div
+                                                                class="modal-content"
+                                                            >
+                                                                <div
+                                                                    class="modal-header"
+                                                                >
+                                                                    <h5
+                                                                        class="modal-title"
+                                                                        id="exampleModalLabel"
+                                                                    >
+                                                                        Nice
+                                                                        Try!
+                                                                    </h5>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="close"
+                                                                        data-dismiss="modal"
+                                                                        aria-label="Close"
+                                                                    >
+                                                                        <span
+                                                                            aria-hidden="true"
+                                                                            >&times;</span
+                                                                        >
+                                                                    </button>
+                                                                </div>
+                                                                <div
+                                                                    class="modal-body"
+                                                                >
+                                                                    You can't
+                                                                    edit or
+                                                                    delete the
+                                                                    tester
+                                                                    account!
+                                                                    Someone else
+                                                                    might want
+                                                                    to use it.
+                                                                    <br />
+                                                                    <br />
+                                                                    Create your
+                                                                    own account
+                                                                    to access
+                                                                    these
+                                                                    features.
+                                                                </div>
+                                                                <div
+                                                                    class="modal-footer"
+                                                                >
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn btn-secondary"
+                                                                        data-dismiss="modal"
+                                                                    >
+                                                                        Close
+                                                                    </button>
+                                                                    <form
+                                                                        action="/signUp2"
+                                                                        method="post"
+                                                                    >
+                                                                        <button
+                                                                            class="btn btn-success"
+                                                                        >
+                                                                            Sign
+                                                                            Up
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <%} else
+                                                    if(adminArr[i].email ===
+                                                    currentUser){%>
+                                                    <!-- Button trigger modal -->
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-primary"
+                                                        data-toggle="modal"
+                                                        data-target="#exampleModal<%=i%>0"
+                                                    >
+                                                        Edit Record
+                                                    </button>
+
+                                                    <!-- Modal -->
+
+                                                    <div
+                                                        class="modal fade"
+                                                        id="exampleModal<%=i%>0"
+                                                        tabindex="-1"
+                                                        role="dialog"
+                                                        aria-labelledby="exampleModalLabel"
+                                                        aria-hidden="true"
+                                                    >
+                                                        <form
+                                                            action="/editRecord"
+                                                            method="post"
+                                                        >
+                                                            <div
+                                                                class="modal-dialog"
+                                                                role="document"
+                                                            >
+                                                                <div
+                                                                    class="modal-content"
+                                                                >
+                                                                    <div
+                                                                        class="modal-header"
+                                                                    >
+                                                                        <h5
+                                                                            class="modal-title"
+                                                                            id="exampleModalLabel"
+                                                                        >
+                                                                            Editing
+                                                                            Record
+                                                                        </h5>
+                                                                        <button
+                                                                            type="button"
+                                                                            class="close"
+                                                                            data-dismiss="modal"
+                                                                            aria-label="Close"
+                                                                        >
+                                                                            <span
+                                                                                aria-hidden="true"
+                                                                                >&times;</span
+                                                                            >
+                                                                        </button>
+                                                                    </div>
+                                                                    <div
+                                                                        class="modal-body"
+                                                                    >
+                                                                        <div
+                                                                            class="row mb-3"
+                                                                        >
+                                                                            <div
+                                                                                class="col"
+                                                                            >
+                                                                                <input
+                                                                                    type="text"
+                                                                                    class="form-control firstNameInput"
+                                                                                    placeholder="First Name: <%=adminArr[i].fName%>"
+                                                                                    name="fName"
+                                                                                    onblur="firstName()"
+                                                                                    value=""
+                                                                                />
+                                                                            </div>
+                                                                            <div
+                                                                                class="col"
+                                                                            >
+                                                                                <input
+                                                                                    type="text"
+                                                                                    class="form-control lnameInput"
+                                                                                    placeholder="Last Name: <%=adminArr[i].lName%>"
+                                                                                    name="lName"
+                                                                                    onblur="lastName()"
+                                                                                    value=""
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div
+                                                                            class="form-group"
+                                                                        >
+                                                                            <input
+                                                                                type="text"
+                                                                                class="form-control"
+                                                                                id="formGroupExampleInput"
+                                                                                placeholder="Position: <%=adminArr[i].position%> "
+                                                                                value=""
+                                                                                name="Position"
+                                                                            />
+                                                                        </div>
+                                                                        <div
+                                                                            class="form-group"
+                                                                        >
+                                                                            <input
+                                                                                type="text"
+                                                                                class="form-control"
+                                                                                id="formGroupExampleInput"
+                                                                                placeholder="Years Employed: <%=adminArr[i].yearsWorked%>"
+                                                                                value=""
+                                                                                name="yearWorked"
+                                                                            />
+                                                                        </div>
+                                                                        <div
+                                                                            class="form-group"
+                                                                        >
+                                                                            <input
+                                                                                type="text"
+                                                                                class="form-control"
+                                                                                id="formGroupExampleInput2"
+                                                                                placeholder=""
+                                                                                value="<%=adminArr[i].email%>"
+                                                                                name="email"
+                                                                                readonly
+                                                                            />
+                                                                        </div>
+                                                                        <div
+                                                                            class="form-group"
+                                                                        >
+                                                                            <input
+                                                                                type="text"
+                                                                                class="form-control"
+                                                                                id="formGroupExampleInput2"
+                                                                                placeholder="Current Pay"
+                                                                                value="Current Pay: <%=adminArr[i].currentPay%>"
+                                                                                disabled
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="modal-footer"
+                                                                    >
+                                                                        <button
+                                                                            type="button"
+                                                                            class="btn btn-secondary"
+                                                                            data-dismiss="modal"
+                                                                        >
+                                                                            Close
+                                                                        </button>
+                                                                        <button
+                                                                            type="submit"
+                                                                            class="btn btn-primary"
+                                                                        >
+                                                                            Save
+                                                                            changes
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-danger"
+                                                        data-toggle="modal"
+                                                        data-target="#exampleModal<%=i%>23"
+                                                    >
+                                                        Delete Record
+                                                    </button>
+
+                                                    <!-- Modal -->
+                                                    <div
+                                                        class="modal fade"
+                                                        id="exampleModal<%=i%>23"
+                                                        tabindex="-1"
+                                                        role="dialog"
+                                                        aria-labelledby="exampleModalLabel"
+                                                        aria-hidden="true"
+                                                    >
+                                                        <div
+                                                            class="modal-dialog"
+                                                            role="document"
+                                                        >
+                                                            <div
+                                                                class="modal-content"
+                                                            >
+                                                                <div
+                                                                    class="modal-header"
+                                                                >
+                                                                    <h5
+                                                                        class="modal-title"
+                                                                        id="exampleModalLabel"
+                                                                    >
+                                                                        Deleting
+                                                                        Record
+                                                                    </h5>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="close"
+                                                                        data-dismiss="modal"
+                                                                        aria-label="Close"
+                                                                    >
+                                                                        <span
+                                                                            aria-hidden="true"
+                                                                            >&times;</span
+                                                                        >
+                                                                    </button>
+                                                                </div>
+                                                                <div
+                                                                    class="modal-body"
+                                                                >
+                                                                    Are you sure
+                                                                    you want to
+                                                                    delete this
+                                                                    record?
+                                                                    (This can't
+                                                                    be undone)
+                                                                </div>
+                                                                <div
+                                                                    class="modal-footer"
+                                                                >
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn btn-secondary"
+                                                                        data-dismiss="modal"
+                                                                    >
+                                                                        Close
+                                                                    </button>
+                                                                    <form
+                                                                        action="/deleteRecord"
+                                                                        method="post"
+                                                                    >
+                                                                        <button
+                                                                            type="submit"
+                                                                            class="btn btn-danger"
+                                                                            name="email"
+                                                                            value="<%=adminArr[i].email%>"
+                                                                        >
+                                                                            Delete
+                                                                            Record
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <%}%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://code.jquery.com/jquery-3.6.1.js"
+            integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+            crossorigin="anonymous"
+        ></script>
+        <script>
+            function lastName() {
+                let value = document.querySelector(".lnameInput").value;
+
+                document.querySelector(".lnameInput").value =
+                    value.charAt(0).toUpperCase() +
+                    value.slice(1).toLowerCase();
+            }
+
+            function firstName() {
+                let value = document.querySelector(".firstNameInput").value;
+
+                document.querySelector(".firstNameInput").value =
+                    value.charAt(0).toUpperCase() +
+                    value.slice(1).toLowerCase();
+            }
+
+            window.addEventListener("load", () => {
+                const box = document.getElementById("message");
+                if (box.innerText === "") {
+                    box.classList.add("visible1");
+                } else {
+                    setTimeout(() => {
+                        // 👇️ removes element from DOM
+                        // box.classList.add(fade);
+                        // console.log("j");
+                        // 👇️ hides element (still takes up space on page)
+
+                        box.classList.remove("visible1");
+                        box.classList.add("hidden1");
+                        // box.innerHTML = "";
+                    }, 3000);
+                }
+            });
+        </script>
+    </body>
+</html>

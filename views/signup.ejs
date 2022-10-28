@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- CSS -->
+
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+            crossorigin="anonymous"
+        />
+        <title>Payroll</title>
+    </head>
+    <body>
+        <%-include('partials/head', {loggedIn: null, siteType: null})%>
+
+        <div class="position-absolute top-50 start-50 translate-middle">
+            <form method="post" action="/signUp">
+                <h1 class="h3 mb-3 fw-normal text-center">Sign Up</h1>
+                <p class="text-<%=color%> text-center"><%=message%></p>
+                <!-- 2 column grid layout with text inputs for the first and last names -->
+                <div class="row mb-4">
+                    <div class="col">
+                        <div class="form-outline">
+                            <input
+                                type="text"
+                                id="form3Example1"
+                                class="form-control firstNameInput"
+                                name="fName"
+                                required
+                                onblur="firstName()"
+                            />
+                            <label class="form-label" for="form3Example1"
+                                >First name</label
+                            >
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-outline">
+                            <input
+                                type="text"
+                                id="form3Example2"
+                                class="form-control lnameInput"
+                                name="lName"
+                                required
+                                onblur="lastName()"
+                            />
+                            <label class="form-label" for="form3Example2"
+                                >Last name</label
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email input -->
+                <div class="form-outline mb-4">
+                    <input
+                        type="email"
+                        id="form3Example3"
+                        class="form-control"
+                        name="email"
+                        required
+                    />
+                    <label class="form-label" for="form3Example3"
+                        >Email address</label
+                    >
+                </div>
+
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <input
+                        type="password"
+                        id="form3Example4 password"
+                        class="form-control"
+                        name="password"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                        title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+                        required
+                    />
+                    <label class="form-label" for="form3Example4"
+                        >Password</label
+                    >
+                </div>
+
+                <div class="form-outline mb-4">
+                    <input
+                        type="password"
+                        id="form3Example4"
+                        class="form-control"
+                        name="password2"
+                        required
+                    />
+                    <label class="form-label" for="form3Example4"
+                        >Re-enter Password</label
+                    >
+                </div>
+
+                <div class="input-group mb-3">
+                    <select class="form-control" name="type" required>
+                        <option hidden value="">User Type</option>
+                        <option value="false">Employee</option>
+                        <option value="true">Admin</option>
+                    </select>
+                </div>
+
+                <!-- Submit button -->
+                <div class="col text-center">
+                    <button
+                        type="submit"
+                        class="btn btn-primary btn-block mb-4"
+                    >
+                        Sign up
+                    </button>
+                </div>
+            </form>
+            <!-- Register buttons -->
+            <div class="text-center">
+                <p>Already a member? <a href="./">Sign In</a></p>
+            </div>
+        </div>
+
+        <script
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"
+        ></script>
+        <script>
+            function lastName() {
+                let value = document.querySelector(".lnameInput").value;
+
+                document.querySelector(".lnameInput").value =
+                    value.charAt(0).toUpperCase() +
+                    value.slice(1).toLowerCase();
+            }
+
+            function firstName() {
+                let value = document.querySelector(".firstNameInput").value;
+
+                document.querySelector(".firstNameInput").value =
+                    value.charAt(0).toUpperCase() +
+                    value.slice(1).toLowerCase();
+            }
+        </script>
+    </body>
+</html>

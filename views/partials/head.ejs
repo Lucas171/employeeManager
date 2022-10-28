@@ -1,0 +1,13 @@
+<nav class="navbar navbar-dark bg-dark p-3">
+    <span class="navbar-brand mb-0 h1">
+        <%if(siteType){%> Company Employee Managament System (Admin Acess) <%}
+        else if(siteType === false){%> Company Employee Managament System
+        (Employee Access) <%} else {%> Company Employee Managament System <%}%>
+    </span>
+
+    <%if(loggedIn != null){ %>
+    <form action="/logout" method="post">
+        <button type="submit" class="btn btn-danger m-0">Logout</button>
+    </form>
+    <% } else {} %>
+</nav>
