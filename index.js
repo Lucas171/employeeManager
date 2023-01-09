@@ -339,7 +339,7 @@ app.post("/editRecord", checkSignIn, (req, res, next) => {
         console.log(position, yearsWorked)
 //        TEST
         if (userFound.admin) {
-            position = req.body.position;
+            position = req.body.Position;
             yearsWorked = req.body.yearWorked;
 //             TEST
             console.log(position, yearsWorked)
