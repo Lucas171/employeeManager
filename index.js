@@ -321,11 +321,11 @@ app.post("/deleteRecord", checkSignIn, (req, res, next) => {
 });
 
 app.post("/editRecord", checkSignIn, (req, res, next) => {
-    let fName = req.body.fName;
-    let lName = req.body.lName;
-    let position = "";
-    let yearsWorked = 0;
-    let email = req.body.email;
+    var fName = req.body.fName;
+    var lName = req.body.lName;
+    var position = "";
+    var yearsWorked = 0;
+    var email = req.body.email;
     console.log(req.body);
 
     User.findOne({ email: email }, (err, userFound) => {
@@ -336,9 +336,9 @@ app.post("/editRecord", checkSignIn, (req, res, next) => {
             lName = userFound.lName;
         }
         if (userFound.admin) {
-            position = req.body.Position;
+            position = req.body.position;
             yearsWorked = req.body.yearWorked;
-
+            alert(position, yearsWorked)
             if (position === undefined || position === "") {
                 position = userFound.position;
             }
@@ -347,7 +347,7 @@ app.post("/editRecord", checkSignIn, (req, res, next) => {
             }
         } else if (!userFound.admin) {
             position = userFound.position;
-            yearsWorked = userFound.yearWorked;
+            yearsWorked = userFound.yearsWorked;
         }
 
         User.findOneAndUpdate(
