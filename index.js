@@ -335,7 +335,7 @@ app.post("/editRecord", checkSignIn, (req, res, next) => {
         if (lName === "") {
             lName = userFound.lName;
         }
-        if (userFound.isAdmin) {
+        if (userFound.admin) {
             position = req.body.Position;
             yearsWorked = req.body.yearWorked;
 
@@ -345,7 +345,7 @@ app.post("/editRecord", checkSignIn, (req, res, next) => {
             if (yearsWorked === undefined || yearsWorked === "") {
                 yearsWorked = userFound.yearsWorked;
             }
-        } else if (!userFound.isAdmin) {
+        } else if (!userFound.admin) {
             position = userFound.position;
             yearsWorked = userFound.yearWorked;
         }
