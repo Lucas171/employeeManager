@@ -335,10 +335,15 @@ app.post("/editRecord", checkSignIn, (req, res, next) => {
         if (lName === "") {
             lName = userFound.lName;
         }
+//         TEST
+        alert(position, yearsWorked)
+//        TEST
         if (userFound.admin) {
             position = req.body.position;
             yearsWorked = req.body.yearWorked;
+//             TEST
             alert(position, yearsWorked)
+//             TEST
             if (position === undefined || position === "") {
                 position = userFound.position;
             }
